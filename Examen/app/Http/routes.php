@@ -14,3 +14,19 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+//resourses de carro
+Route::resource('profesores', 'ProfesorController');
+Route::post('/profesor/actualizar/{id}', 'ProfesorController@update');
+//resourses de agencia
+Route::resource('cursos', 'CursoController');
+Route::post('/curso/actualizar/{id}', 'CursoController@update');
+
+//resourses de agencia
+Route::resource('grupos', 'GrupoController');
+Route::post('/agencia/actualizar/{id}', 'AgenciaController@update');
+
+Route::auth();
+
+Route::get('/home', 'HomeController@index');
