@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use DB;
+use Response;
 
 class GrupoController extends Controller
 {
@@ -25,7 +27,13 @@ class GrupoController extends Controller
      */
     public function create()
     {
-        //
+         $cursos = DB::table('cursos')
+        ->select('*')
+        ->get();
+        $profesores = DB::table('profesores')
+        ->select('*')
+        ->get();
+        return view('grupos.crear', array('cursos'=> $cursos, 'profesores'=> $profesores));
     }
 
     /**
