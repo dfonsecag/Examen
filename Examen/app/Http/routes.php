@@ -16,16 +16,16 @@ Route::get('/', function () {
 });
 
 
-//resourses de carro
+//resourses de profesores
 Route::resource('profesores', 'ProfesorController');
 Route::post('/profesor/actualizar/{id}', 'ProfesorController@update');
-//resourses de agencia
+//resourses de cursos
 Route::resource('cursos', 'CursoController');
 Route::post('/curso/actualizar/{id}', 'CursoController@update');
 
-//resourses de agencia
+//resourses de grupos
 Route::resource('grupos', 'GrupoController');
-Route::post('/agencia/actualizar/{id}', 'AgenciaController@update');
+Route::post('/grupo/actualizar/{id}', 'GrupoController@update');
 
 Route::auth();
 

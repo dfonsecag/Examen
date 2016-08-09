@@ -42,11 +42,15 @@ class ProfesorController extends Controller
      */
     public function store(Request $request)
     {
+     if($request->input('nombre')=='')
+         return response()->json('Digite el nombre del profesor');
+     else{
          DB::table('profesores')->insert([
-                ['nombre' => $request->input('nombre')]
-                ]);
-            return response()->json('creado');
-    }
+            ['nombre' => $request->input('nombre')]
+            ]);
+         return response()->json('creado');
+     }
+ }
 
     /**
      * Display the specified resource.
@@ -56,7 +60,8 @@ class ProfesorController extends Controller
      */
     public function show($id)
     {
-        //
+        $profesor = DB::table('profesores')->where('id', $id)->first();
+        return view('profesores.show', array('profesor'=> $profesor));
     }
 
     /**
@@ -80,10 +85,14 @@ class ProfesorController extends Controller
      */
     public function update(Request $request, $id)
     {
+     if($request->input('nombre')=='')
+         return response()->json('Digite el nombre del profesor');
+     else{
         DB::table('profesores')->where('id', $id)
         ->update(array('nombre' => $request->input('nombre')));
-        return redirect('profesores');
+        return response()->json('ok');
     }
+}
 
     /**
      * Remove the specified resource from storage.
@@ -92,8 +101,13 @@ class ProfesorController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-        DB::table('profesores')->where('id', '=', $id)->delete();
-        return response()->json('ok');
+    {   
+       $profesores = DB::table('grupos')->where('idProfesor', $id)->first(); 
+       if($profesores==null){
+       DB::table('profesores')->where('id', '=', $id)->delete();
+       return response()->json('ok');
     }
+       else
+        return response()->json('Este profesor esta relacionado a un grupo.');
+   }
 }

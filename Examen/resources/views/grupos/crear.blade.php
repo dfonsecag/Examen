@@ -37,14 +37,12 @@
       type: "POST",
       url: '/grupos',
       data: {
-        curso: $('input[name=curso]').val(),
-        profesor: $('input[name=profesor]').val(),
+        curso: $('#curso').val(),
+        profesor: $('#profesor').val(),
       '_token': $('input[name=_token]').val()},
         success: function(response) {
           if(response=='creado'){
             swal({   title: "",   text: response,   timer: 2000, type: "success",  showConfirmButton: false});
-             $('input[name=codigo]').val('');
-             $('input[name=descripcion]').val('');
           }
 
           else{

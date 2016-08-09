@@ -17,8 +17,9 @@ class GrupoController extends Controller
      */
     public function index()
     {
-        //
-    }
+       $grupos = DB::select('select t1.id, t2.codigo, t2.descripcion, t3.nombre FROM grupos AS t1, cursos AS t2, profesores AS t3 WHERE (t3.id = t1.idProfesor) AND (t2.id = t1.idCurso)');
+       return view('grupos.index', array('grupos'=> $grupos));
+   }
 
     /**
      * Show the form for creating a new resource.
@@ -27,14 +28,14 @@ class GrupoController extends Controller
      */
     public function create()
     {
-         $cursos = DB::table('cursos')
-        ->select('*')
-        ->get();
-        $profesores = DB::table('profesores')
-        ->select('*')
-        ->get();
-        return view('grupos.crear', array('cursos'=> $cursos, 'profesores'=> $profesores));
-    }
+       $cursos = DB::table('cursos')
+       ->select('*')
+       ->get();
+       $profesores = DB::table('profesores')
+       ->select('*')
+       ->get();
+       return view('grupos.crear', array('cursos'=> $cursos, 'profesores'=> $profesores));
+   }
 
     /**
      * Store a newly created resource in storage.
@@ -44,8 +45,17 @@ class GrupoController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+       if($request->input('profesor')=='')
+           return response()->json('Seleccione el profesor');
+       elseif ($request->input('curso')=='') 
+           return response()->json('Seleccione el curso');
+       else{
+           DB::table('grupos')->insert([
+            ['idProfesor' => $request->input('profesor'),'idCurso' => $request->input('curso')]
+            ]);
+           return response()->json('creado');
+       }
+   }
 
     /**
      * Display the specified resource.
@@ -55,7 +65,8 @@ class GrupoController extends Controller
      */
     public function show($id)
     {
-        //
+        $grupo = DB::select('select t1.id, t2.codigo, t2.descripcion, t3.nombre FROM grupos AS t1, cursos AS t2, profesores AS t3 WHERE (t3.id = t1.idProfesor and t2.id = t1.idCurso) and t1.id=?',[$id]);
+       return view('grupos.show', array('grupo'=> $grupo));
     }
 
     /**
@@ -66,7 +77,14 @@ class GrupoController extends Controller
      */
     public function edit($id)
     {
-        //
+        $profesores = DB::table('profesores')
+        ->select('*')
+        ->get();
+        $cursos = DB::table('cursos')
+        ->select('*')
+        ->get();
+        $grupo = DB::table('grupos')->where('id', $id)->first();
+        return view('grupos.editar', array('profesores'=> $profesores, 'cursos'=>$cursos, 'grupo'=>$grupo)); 
     }
 
     /**
@@ -78,8 +96,11 @@ class GrupoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
-    }
+        
+       DB::table('grupos')->where('id', $id)
+       ->update(array('idProfesor' => $request->input('profesor'),'idCurso' => $request->input('curso')));
+       return redirect('grupos');
+   }
 
     /**
      * Remove the specified resource from storage.
@@ -89,6 +110,7 @@ class GrupoController extends Controller
      */
     public function destroy($id)
     {
-        //
-    }
+       DB::table('grupos')->where('id', '=', $id)->delete();
+       return response()->json('ok');
+   }
 }

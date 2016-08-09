@@ -15,7 +15,9 @@
    <td>{{$item->codigo}}</td>
    <td>{{$item->descripcion}}</td>
    <td><a class="btn btn-warning" href='cursos/{{$item->id}}/edit'><i class="fa fa-pencil" aria-hidden="true"> Editar</i></a>
-    <button data-target="modal1" class="btn btn-danger" onclick="imprimir({{$item->id}}, '{{$item->descripcion}}')"><i class="fa fa-trash-o" aria-hidden="true"> Eliminar</i></button></td>
+    <button data-target="modal1" class="btn btn-danger" onclick="imprimir({{$item->id}}, '{{$item->descripcion}}')"><i class="fa fa-trash-o" aria-hidden="true"> Eliminar</i></button>
+    <a class="btn btn-primary" href='cursos/{{$item->id}}'><i class="fa fa-pencil" aria-hidden="true"> Ver</i></a>
+    </td>
   </tr>
   @endforeach
 </table>

@@ -19,11 +19,11 @@ class CursoController extends Controller
      */
     public function index()
     {
-         $cursos = DB::table('cursos')
-        ->select('*')
-        ->get();
-        return view('cursos.index', array('cursos'=> $cursos));
-    }
+       $cursos = DB::table('cursos')
+       ->select('*')
+       ->get();
+       return view('cursos.index', array('cursos'=> $cursos));
+   }
 
     /**
      * Show the form for creating a new resource.
@@ -43,11 +43,18 @@ class CursoController extends Controller
      */
     public function store(Request $request)
     {
+        if($request->input('codigo')=='')
+           return response()->json('Digite el código del curso');
+       elseif ($request->input('descripcion')=='') 
+           return response()->json('Digite la descripcion del curso');
+       else{
+
         DB::table('cursos')->insert([
-                ['codigo' => $request->input('codigo'),'descripcion' => $request->input('descripcion')]
-                ]);
-            return response()->json('creado');
+            ['codigo' => $request->input('codigo'),'descripcion' => $request->input('descripcion')]
+            ]);
+        return response()->json('creado');
     }
+}
 
     /**
      * Display the specified resource.
@@ -57,7 +64,8 @@ class CursoController extends Controller
      */
     public function show($id)
     {
-        //
+        $curso = DB::table('cursos')->where('id', $id)->first();
+        return view('cursos.show', array('curso'=> $curso));
     }
 
     /**
@@ -81,10 +89,16 @@ class CursoController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if($request->input('codigo')=='')
+           return response()->json('Digite el código del curso');
+       elseif ($request->input('descripcion')=='') 
+           return response()->json('Digite la descripcion del curso');
+       else{
         DB::table('cursos')->where('id', $id)
         ->update(array('codigo' => $request->input('codigo'),'descripcion' => $request->input('descripcion')));
-        return redirect('cursos');
+        return response()->json('ok');
     }
+}
 
     /**
      * Remove the specified resource from storage.
@@ -94,7 +108,14 @@ class CursoController extends Controller
      */
     public function destroy($id)
     {
+        $cursos = DB::table('grupos')->where('idCurso', $id)->first(); 
+        if($cursos==null){
          DB::table('cursos')->where('id', '=', $id)->delete();
-        return response()->json('ok');
-    }
+         return response()->json('ok');
+     }
+     else
+        return response()->json('Este curso esta relacionado a un grupo.');
 }
+
+}
+
